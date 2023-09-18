@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Progress Bar Example</title>
+</head>
+<body>
+    <h1>Processing...</h1>
+    <progress id="progressBar" value="0" max="100"></progress>
+    <p id="status">0%</p>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const progressBar = document.getElementById('progressBar');
+            const statusElement = document.getElementById('status');
+
+            function updateProgress(percentage) {
+                progressBar.value = percentage;
+                statusElement.innerText = `${percentage}%`;
+            }
+
+            function pollProgress() {
+                fetch('/get_progress')
+                    .then(response => response.json())
+                    .then(data => {
+                        updateProgress(data.progress);
+                        if (data.progress < 100) {
+                            setTimeout(pollProgress, 100);
+                        }
+                    });
+            }
+
+            pollProgress();
+        });
+    </script>
+</body>
+</html>
