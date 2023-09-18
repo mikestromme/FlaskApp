@@ -41,5 +41,11 @@ def get_progress():
 
     return jsonify({'progress': current_progress})
 
+@app.route('/process', methods=['POST'])
+def process_audio():
+    # Start the background task to run the demucs command
+    socketio.start_background_task(target=run_demucs)
+    return 'Processing started'
+
 if __name__ == '__main__':
     app.run(debug=True)
